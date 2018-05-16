@@ -1,6 +1,7 @@
 package org.twinnation.seminar.springsecurity.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -30,6 +31,14 @@ public class User implements UserDetails {
 	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
+	}
+	
+	
+	public User(Authentication authentication) {
+		User user = (User)authentication.getPrincipal();
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.isAdmin = user.isAdmin();
 	}
 	
 	

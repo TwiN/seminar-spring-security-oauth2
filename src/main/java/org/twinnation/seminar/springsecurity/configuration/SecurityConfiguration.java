@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.twinnation.seminar.springsecurity.bean.User;
 import org.twinnation.seminar.springsecurity.service.UserService;
 import org.twinnation.seminar.springsecurity.util.Utils;
 
@@ -91,7 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				PrintWriter writer = response.getWriter();
 				response.setContentType("application/json");
 				response.setStatus(HttpStatus.ACCEPTED.value());
-				writer.write(Utils.jsonReply("ERROR", false, "USER", authentication.getPrincipal()));
+				writer.write(Utils.jsonReply("ERROR", false, "USER", new User(authentication)));
 			}
 		};
 	}
