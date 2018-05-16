@@ -36,7 +36,7 @@ public class UserController {
 	}
 	
 	
-	@PutMapping("/users")
+	@PostMapping("/users")
 	public String createUser(@RequestParam String username, @RequestParam String password) {
 		return userService.createUser(username, password);
 	}

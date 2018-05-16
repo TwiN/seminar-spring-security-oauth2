@@ -9,12 +9,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.twinnation.seminar.springsecurity.service.UserService;
 import org.twinnation.seminar.springsecurity.util.Utils;
 
@@ -45,6 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.loginPage("/login")
 				.loginProcessingUrl("/api/login")
 				.failureHandler(authenticationFailureHandler())
+				.successHandler(authenticationSuccessHandler())
 			.and()
 			.oauth2Login()
 				.loginPage("/login")
@@ -74,6 +78,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				response.setContentType("application/json");
 				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 				writer.write(Utils.jsonReply("ERROR", true, "MESSAGE", "Invalid username or password"));
+			}
+		};
+	}
+	
+	
+	@Bean
+	public AuthenticationSuccessHandler authenticationSuccessHandler() {
+		return new SimpleUrlAuthenticationSuccessHandler() {
+			@Override
+			public void  onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+				PrintWriter writer = response.getWriter();
+				response.setContentType("application/json");
+				response.setStatus(HttpStatus.ACCEPTED.value());
+				writer.write(Utils.jsonReply("ERROR", false, "USER", authentication.getPrincipal()));
 			}
 		};
 	}
