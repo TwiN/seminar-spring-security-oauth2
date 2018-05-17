@@ -1,24 +1,30 @@
 package org.twinnation.seminar.springsecurity.bean;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
-public class Statistic {
+@Table(name="score")
+public class Score {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name="username")
 	private String username;
-	private Long score;
+	
+	@Column(name="points")
+	private Long points;
 	
 	
-	public Statistic() {
+	public Score(String username, Long points) {
+		this.username = username;
+		this.points = points;
 	}
+	
+	
+	public Score() {}
 	
 	
 	public Long getId() {
@@ -41,13 +47,13 @@ public class Statistic {
 	}
 	
 	
-	public Long getScore() {
-		return score;
+	public Long getPoints() {
+		return points;
 	}
 	
 	
-	public void setScore(Long score) {
-		this.score = score;
+	public void setPoints(Long points) {
+		this.points = points;
 	}
 	
 }
