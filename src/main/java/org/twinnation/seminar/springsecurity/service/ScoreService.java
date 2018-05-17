@@ -24,4 +24,9 @@ public class ScoreService {
 		return scoreRepository.findAll();
 	}
 	
+	
+	public void deleteScore(Long id) {
+		scoreRepository.deleteById(id);
+	}
+	
 }
