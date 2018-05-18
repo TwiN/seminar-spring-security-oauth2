@@ -18,10 +18,12 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.twinnation.seminar.springsecurity.bean.User;
 import org.twinnation.seminar.springsecurity.service.UserService;
 import org.twinnation.seminar.springsecurity.util.Utils;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -59,7 +61,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 					.userService(userService)
 			.and().and()
 			.logout()
-				.logoutUrl("/api/logout").permitAll()
+				.logoutSuccessHandler(logoutSuccessHandler())
+				.logoutUrl("/api/logout").clearAuthentication(true).deleteCookies("JSESSIONID").invalidateHttpSession(true).permitAll()
 			.and()
 			.authorizeRequests()
 				.anyRequest().permitAll();
@@ -82,6 +85,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 				writer.write(Utils.jsonReply("ERROR", true, "MESSAGE", "Invalid username or password"));
 			}
+		};
+	}
+	
+	
+	@Bean
+	public LogoutSuccessHandler logoutSuccessHandler() {
+		return (request, response, auth) -> {
+			PrintWriter writer = response.getWriter();
+			response.setStatus(HttpStatus.ACCEPTED.value());
+			response.setContentType("application/json");
+			writer.write(Utils.jsonReply("ERROR", false, "MESSAGE", "You have been logged out"));
 		};
 	}
 	
